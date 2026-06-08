@@ -36,6 +36,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.composebasic.model.Article
 import com.example.composebasic.network.Resource
+import com.example.composebasic.ui.components.ArticleItem
+import com.example.composebasic.ui.components.SearchBar
 import com.example.composebasic.ui.theme.ComposeBasicTheme
 import com.example.composebasic.viewmodel.NewsViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -63,32 +65,14 @@ class MainActivity : ComponentActivity() {
 fun NewsScreen(viewModel: NewsViewModel, modifier: Modifier = Modifier) {
     val state by viewModel.articlesState.collectAsStateWithLifecycle()
     val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
-    val keyboardController = LocalSoftwareKeyboardController.current
 
     Column(modifier = modifier
         .fillMaxSize()) {
-        OutlinedTextField(
-            value = searchQuery,
-            onValueChange = { viewModel.onSearchQueryChange(it) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            shape = RoundedCornerShape(8.dp),
-            placeholder = { Text(
-                "Search news...",
-                color = MaterialTheme.colorScheme.primary
-            ) },
-            leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-            keyboardActions = KeyboardActions(
-                onSearch = {
-                    viewModel.fetchNews()
-                    keyboardController?.hide()
-                }
-            )
+        SearchBar(
+            searchQuery,
+            viewModel::onSearchQueryChange,
+            viewModel::fetchNews
         )
-
         Box(
             modifier = Modifier
                 .weight(1f)
@@ -118,51 +102,13 @@ fun NewsScreen(viewModel: NewsViewModel, modifier: Modifier = Modifier) {
 fun ArticleList(articles: List<Article>) {
     LazyColumn(modifier = Modifier.fillMaxSize()) {
         items(articles) { article ->
-            ArticleItem(article)
-        }
-    }
-}
-
-@Composable
-fun ArticleItem(article: Article) {
-    Surface(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp),
-        shape = RoundedCornerShape(8.dp),
-        tonalElevation = 4.dp
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = article.title ?: "No Title",
-                style = MaterialTheme.typography.titleMedium
-            )
-            Text(
-                text = article.description ?: "No Description",
-                style = MaterialTheme.typography.bodySmall,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis
+            ArticleItem(
+                article,
+                true,
+                {}
             )
         }
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun ArticleItemPreview() {
-    ComposeBasicTheme {
-        ArticleItem(
-            article = Article(
-                source = null,
-                author = "John Doe",
-                title = "Compose Preview Example",
-                description = "This is a sample description for the article item preview. It shows how the text will wrap.",
-                url = null,
-                urlToImage = null,
-                publishedAt = "2023-10-27",
-                content = null
-            )
-        )
-    }
-}
 

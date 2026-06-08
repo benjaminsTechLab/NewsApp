@@ -15,6 +15,8 @@ hiltNavigationCompose = "1.2.0"
 kspVersion = "2.2.10-2.0.2"
 onxx = "1.25.0"
 onnxExtensions = "0.13.0"
+uiGraphics = "1.11.2"
+foundationLayout = "1.11.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -40,6 +42,8 @@ hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-comp
 hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 onnx-android = { group = "com.microsoft.onnxruntime", name = "onnxruntime-android", version.ref = "onxx" }
 onnx-extensions = { group = "com.microsoft.onnxruntime", name = "onnxruntime-extensions-android", version.ref = "onnxExtensions" }
+androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics", version.ref = "uiGraphics" }
+androidx-compose-foundation-layout = { group = "androidx.compose.foundation", name = "foundation-layout", version.ref = "foundationLayout" }
 
 
 
