@@ -17,6 +17,8 @@ onxx = "1.25.0"
 onnxExtensions = "0.13.0"
 uiGraphics = "1.11.2"
 foundationLayout = "1.11.2"
+playServicesTasks = "18.1.0"
+aicore = "0.0.1-exp01"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -44,7 +46,8 @@ onnx-android = { group = "com.microsoft.onnxruntime", name = "onnxruntime-androi
 onnx-extensions = { group = "com.microsoft.onnxruntime", name = "onnxruntime-extensions-android", version.ref = "onnxExtensions" }
 androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics", version.ref = "uiGraphics" }
 androidx-compose-foundation-layout = { group = "androidx.compose.foundation", name = "foundation-layout", version.ref = "foundationLayout" }
-
+play-services-tasks = { group = "com.google.android.gms", name = "play-services-tasks", version.ref = "playServicesTasks" }
+aicore = { group = "com.google.ai.edge.aicore", name = "aicore", version.ref = "aicore" }
 
 
 [plugins]
@@ -55,4 +58,5 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "kspVersion" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 secrets = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "secrets" }
 
-
+[bundles]
+gemini-ondevice = ["play-services-tasks", "aicore"]

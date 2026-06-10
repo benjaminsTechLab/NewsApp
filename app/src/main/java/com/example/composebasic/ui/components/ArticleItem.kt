@@ -31,7 +31,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.composebasic.model.Article
 import com.example.composebasic.ui.theme.ComposeBasicTheme
-import com.example.composebasic.ui.theme.LightSurface
 
 @Composable
 fun ArticleItem(

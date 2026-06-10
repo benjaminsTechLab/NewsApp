@@ -4,10 +4,13 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <uses-feature
+        android:name="android.hardware.type.ai_core"
+        android:required="false" />
+
     <application
         android:name=".BaseApplication"
         android:allowBackup="true"
-        android:extractNativeLibs="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"

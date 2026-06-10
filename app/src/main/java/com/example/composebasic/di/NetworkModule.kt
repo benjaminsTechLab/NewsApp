@@ -3,6 +3,7 @@ package com.example.composebasic.di
 import com.example.composebasic.onxx.EmotionClassifier
 import android.content.Context
 import com.example.composebasic.BuildConfig
+import com.example.composebasic.data.Respository.SummaryRepository
 import com.example.composebasic.network.ApiService
 import dagger.Module
 import dagger.Provides
@@ -54,5 +55,11 @@ object NetworkModule {
     @Singleton
     fun provideEmotionClassifier(@ApplicationContext context: Context): EmotionClassifier {
         return EmotionClassifier(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSummaryRepository(@ApplicationContext context: Context): SummaryRepository {
+        return SummaryRepository(context)
     }
 }

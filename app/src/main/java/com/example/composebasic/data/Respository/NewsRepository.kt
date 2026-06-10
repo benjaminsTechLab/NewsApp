@@ -1,6 +1,8 @@
-package com.example.composebasic.network
+package com.example.composebasic.data.Respository
 
 import com.example.composebasic.model.Article
+import com.example.composebasic.network.ApiService
+import com.example.composebasic.network.Resource
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -11,7 +13,7 @@ import javax.inject.Singleton
 class NewsRepository @Inject constructor(private val apiService: ApiService) {
 
     /**
-     * Fetches all news articles and wraps the result in a [Resource].
+     * Fetches all news articles and wraps the result in a [com.example.composebasic.network.Resource].
      */
     suspend fun getNewsArticles(query: String = "android"): Resource<List<Article>> {
         return try {

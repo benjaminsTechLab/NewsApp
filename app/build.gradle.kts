@@ -30,7 +30,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.composebasic"
-        minSdk = 24
+        minSdk = 31
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -83,6 +83,9 @@ dependencies {
     //ONXX
     implementation(libs.onnx.android)
     implementation(libs.onnx.extensions)
+
+    //Gemini
+    implementation(libs.bundles.gemini.ondevice)
 
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))
