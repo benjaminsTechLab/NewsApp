@@ -7,25 +7,17 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -34,7 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -42,11 +34,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.composebasic.network.Resource
 import com.example.composebasic.ui.components.ArticleList
 import com.example.composebasic.ui.components.SearchBar
-import com.example.composebasic.ui.components.SearchBarWithScroll
 import com.example.composebasic.ui.theme.ComposeBasicTheme
 import com.example.composebasic.ui.theme.Dimensions.paddingLarge
 import com.example.composebasic.ui.theme.Dimensions.paddingMedium
-import com.example.composebasic.ui.theme.Dimensions.paddingSmall
 import com.example.composebasic.viewmodel.NewsViewModel
 import com.yourapp.ui.preview.PreviewData
 import dagger.hilt.android.AndroidEntryPoint
@@ -75,6 +65,11 @@ fun NewsScreen(viewModel: NewsViewModel, modifier: Modifier = Modifier) {
     val state by viewModel.articlesState.collectAsStateWithLifecycle()
     val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    val loadingStrings = arrayOf(
+        stringResource(R.string.loading_fetching),
+        stringResource(R.string.loading_classifying),
+    )
+    val defaultQuery = stringResource(R.string.default_query)
 
     Scaffold(modifier = Modifier
         .nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -90,7 +85,11 @@ fun NewsScreen(viewModel: NewsViewModel, modifier: Modifier = Modifier) {
                             .padding(horizontal = paddingLarge, vertical = paddingLarge),
                         query = searchQuery,
                         onQueryChange = { viewModel.onSearchQueryChange(it) },
-                        onSearchText = { viewModel.fetchNews() }
+                        onSearchText = { viewModel.fetchNews(
+                                defaultQuery = defaultQuery,
+                                loadingStrings = loadingStrings
+                            )
+                        }
                     )
                 },
                 scrollBehavior = scrollBehavior
@@ -110,7 +109,11 @@ fun NewsScreen(viewModel: NewsViewModel, modifier: Modifier = Modifier) {
             ) {
                 when (state) {
                     is Resource.Loading -> {
-                        CircularProgressIndicator()
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            CircularProgressIndicator()
+                            Spacer(modifier = Modifier.height(paddingMedium))
+                            Text(text = state.message)
+                        }
                     }
 
                     is Resource.Success -> {
@@ -175,7 +178,11 @@ fun NewsScreen() {
             ) {
                 when (state) {
                     is Resource.Loading<*> -> {
-                        CircularProgressIndicator()
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            CircularProgressIndicator()
+                            Spacer(modifier = Modifier.height(paddingMedium))
+                            Text(text = "Loading")
+                        }
                     }
 
                     is Resource.Success -> {
@@ -196,5 +203,3 @@ fun NewsScreen() {
         }
     }
 }
-
-

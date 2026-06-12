@@ -11,17 +11,21 @@ import com.example.composebasic.data.Respository.SummaryRepository
 import com.example.composebasic.data.mapper.toSectionList
 import com.example.composebasic.network.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
+
 
 @HiltViewModel
 class NewsViewModel @Inject constructor(
     private val repository: NewsRepository,
     private val classifier: EmotionClassifier,
     private val summarizer: SummaryRepository) : ViewModel() {
+
 
     // 1. Private MutableStateFlow - can be modified inside the ViewModel
     private val _articlesState = MutableStateFlow<Resource<List<Section>>>(Resource.Loading())
@@ -32,21 +36,22 @@ class NewsViewModel @Inject constructor(
     private val _searchQuery = MutableStateFlow("")
     val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
 
-    init {
-        fetchNews()
-    }
-
     fun onSearchQueryChange(newQuery: String) {
         _searchQuery.value = newQuery
     }
 
-    fun fetchNews(query: String = _searchQuery.value.ifEmpty { "Android" }) {
+    fun fetchNews(defaultQuery: String? = null, loadingStrings: Array<String>? = null) {
+        val searchQuery = _searchQuery.value.ifEmpty { defaultQuery ?: "" }
         viewModelScope.launch {
-            _articlesState.value = Resource.Loading()
-            val result = repository.getNewsArticles(query)
+            _articlesState.value = Resource.Loading(message = loadingStrings?.get(0) ?: "")
+            val result = repository.getNewsArticles(searchQuery)
             result.takeIf { it is Resource.Success }?.let { articleResource ->
                 articleResource.data?.let { articles ->
-                    _articlesState.value = classifyText(articles)
+                    _articlesState.value = Resource.Loading(message = loadingStrings?.get(1) ?: "") // keep Loading state while classifying
+                    val classified = withContext(Dispatchers.Default) {
+                        classifyText(articles)
+                    }
+                    _articlesState.value = classified         // then set result
                 }
             } ?: run {
                 _articlesState.value = result.toSectionResource()

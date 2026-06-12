@@ -7,8 +7,7 @@ import com.example.composebasic.network.Resource
 fun Resource<List<Article>>.toSectionResource(): Resource<List<Section>> =
     when (this) {
         is Resource.Success -> Resource.Success(data!!.toSections())
-        is Resource.Error -> Resource.Error(message!!, data?.toSections())
-        is Resource.Loading -> Resource.Loading(data?.toSections())
+        else -> Resource.Error(message, data?.toSections())
     }
 
 fun List<Article>.toSections(): List<Section> =
