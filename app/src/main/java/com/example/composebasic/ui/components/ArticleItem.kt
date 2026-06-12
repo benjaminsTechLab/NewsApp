@@ -31,6 +31,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.composebasic.model.Article
 import com.example.composebasic.ui.theme.ComposeBasicTheme
+import com.example.composebasic.ui.theme.Dimensions.paddingLarge
+import com.example.composebasic.ui.theme.Dimensions.paddingSmall
 
 @Composable
 fun ArticleItem(
@@ -41,15 +43,15 @@ fun ArticleItem(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 4.dp),
-        shape = RoundedCornerShape(16.dp),
+            .padding(horizontal = paddingLarge, vertical = paddingSmall),
+        shape = RoundedCornerShape(paddingLarge),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(paddingLarge)
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically
@@ -97,7 +99,7 @@ fun ArticleItem(
                 overflow = TextOverflow.Clip,
             )
 
-            Spacer(modifier = Modifier.height(4.dp))
+            Spacer(modifier = Modifier.height(paddingSmall))
 
             // Preview
             Text(
@@ -118,15 +120,15 @@ fun ArticleItemPreview() {
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 4.dp),
-            shape = RoundedCornerShape(16.dp),
+                .padding(horizontal = paddingLarge, vertical = paddingSmall),
+            shape = RoundedCornerShape(paddingLarge),
             colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.surface
             ),
             elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
         ) {
             Column(
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.padding(paddingLarge)
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically
@@ -174,7 +176,7 @@ fun ArticleItemPreview() {
                     overflow = TextOverflow.Clip,
                 )
 
-                Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(paddingSmall))
 
                 // Preview
                 Text(

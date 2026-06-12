@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,20 +24,19 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.composebasic.ui.theme.ComposeBasicTheme
+import com.example.composebasic.ui.theme.Dimensions.paddingMedium
+import com.example.composebasic.ui.theme.Dimensions.paddingLarge
+import com.example.composebasic.ui.theme.Dimensions.paddingSmall
 
 @Composable
 fun SearchBar(
+    modifier: Modifier = Modifier,
     query: String,
     onQueryChange: (String) -> Unit,
     onSearchText: () -> Unit,
 ) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 16.dp)
-            .clip(RoundedCornerShape(50.dp))
-            .background(MaterialTheme.colorScheme.surfaceVariant)
-            .padding(horizontal = 16.dp, vertical = 16.dp),
+        modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
@@ -45,7 +45,7 @@ fun SearchBar(
             tint = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
-        Spacer(modifier = Modifier.width(8.dp))
+        Spacer(modifier = Modifier.width(paddingMedium))
 
         BasicTextField(
             value = query,
@@ -80,17 +80,13 @@ fun SearchBar(
 @Preview(showBackground = true)
 @Composable
 fun SearchBarPreview(
+    modifier: Modifier = Modifier,
     query: String = "Search",
     onQueryChange: (String) -> Unit = {}
 ) {
     ComposeBasicTheme(dynamicColor = false) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 16.dp)
-                .clip(RoundedCornerShape(50.dp))
-                .background(MaterialTheme.colorScheme.surfaceVariant)
-                .padding(horizontal = 16.dp, vertical = 16.dp),
+            modifier = modifier,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
@@ -99,7 +95,7 @@ fun SearchBarPreview(
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
-            Spacer(modifier = Modifier.width(16.dp))
+            Spacer(modifier = Modifier.width(paddingLarge))
 
             BasicTextField(
                 value = query,
