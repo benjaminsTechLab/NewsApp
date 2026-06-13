@@ -3,6 +3,7 @@ package com.example.composebasic.onxx
 import ai.onnxruntime.*
 import ai.onnxruntime.extensions.OrtxPackage
 import android.content.Context
+import com.example.composebasic.R
 import java.nio.ByteBuffer
 import java.nio.LongBuffer
 import java.nio.channels.FileChannel
@@ -10,7 +11,7 @@ import java.nio.channels.FileChannel
 class EmotionClassifier(context: Context) {
 
     private val env = OrtEnvironment.getEnvironment()
-    private val labels = listOf("anger", "disgust", "fear", "joy", "neutral", "sadness", "surprise")
+    private val labels = context.resources.getStringArray(R.array.emotions_array)
 
     private val tokSession: OrtSession
     private val modelSession: OrtSession

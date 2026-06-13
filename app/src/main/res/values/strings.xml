@@ -3,4 +3,17 @@
     <string name="loading_fetching">Fetching News...</string>
     <string name="loading_classifying">Classifying Articles...</string>
     <string name="default_query">Android</string>
+    <string name="header_type">Header</string>
+    <string name="item_type">Item</string>
+
+
+    <string-array name="emotions_array">
+        <item>anger</item>
+        <item>disgust</item>
+        <item>fear</item>
+        <item>joy</item>
+        <item>neutral</item>
+        <item>sadness</item>
+        <item>surprise</item>
+    </string-array>
 </resources>

@@ -1,13 +1,14 @@
 package com.example.composebasic.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,6 +26,7 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.composebasic.R
 import com.example.composebasic.ui.theme.ComposeBasicTheme
+import com.example.composebasic.ui.theme.Dimensions.lottieHeaderSize
 
 @Composable
 fun AnimatedStickyHeader(title: String,
@@ -41,6 +43,7 @@ fun AnimatedStickyHeader(title: String,
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .wrapContentHeight()
             .background(MaterialTheme.colorScheme.surface)
             .padding(horizontal = 16.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -48,7 +51,7 @@ fun AnimatedStickyHeader(title: String,
         LottieAnimation(
             composition = composition,
             progress = { progress },
-            modifier = Modifier.size(32.dp).wrapContentSize()
+            modifier = Modifier.size(lottieHeaderSize)
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(text = title, style = MaterialTheme.typography.titleMedium)

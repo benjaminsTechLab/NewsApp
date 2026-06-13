@@ -60,5 +60,5 @@ object PreviewData {
             content = null
         )
     )
-    val sections get() = listOf(Section("Anger", articleList), Section("Happy", articleList), Section("Sad", articleList))
+    val sections get() = listOf(Section("Anger", articleList), Section("Disgust", articleList), Section("Fear", articleList))
 }

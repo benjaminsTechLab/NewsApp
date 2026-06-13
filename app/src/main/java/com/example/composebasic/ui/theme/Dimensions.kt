@@ -7,4 +7,5 @@ object Dimensions {
     val paddingMedium = 8.dp
     val paddingLarge = 16.dp
     val searchBarHeight = 80.dp
+    val lottieHeaderSize = 42.dp
 }
