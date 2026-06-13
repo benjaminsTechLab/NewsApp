@@ -1,4 +1,4 @@
-package com.yourapp.ui.preview
+package com.example.composebasic.ui.preview
 
 import com.example.composebasic.model.Article
 import com.example.composebasic.model.Section
@@ -60,5 +60,5 @@ object PreviewData {
             content = null
         )
     )
-    val sections = listOf(Section("Anger", articleList), Section("Happy", articleList), Section("Sad", articleList))
+    val sections get() = listOf(Section("Anger", articleList), Section("Happy", articleList), Section("Sad", articleList))
 }

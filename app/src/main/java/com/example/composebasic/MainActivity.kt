@@ -38,7 +38,7 @@ import com.example.composebasic.ui.theme.ComposeBasicTheme
 import com.example.composebasic.ui.theme.Dimensions.paddingLarge
 import com.example.composebasic.ui.theme.Dimensions.paddingMedium
 import com.example.composebasic.viewmodel.NewsViewModel
-import com.yourapp.ui.preview.PreviewData
+import com.example.composebasic.ui.preview.PreviewData
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
