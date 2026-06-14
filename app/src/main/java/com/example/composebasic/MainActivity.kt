@@ -31,14 +31,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.composebasic.interfaces.NewsViewModelContract
 import com.example.composebasic.network.Resource
 import com.example.composebasic.ui.components.ArticleList
 import com.example.composebasic.ui.components.SearchBar
+import com.example.composebasic.ui.preview.FakeNewsViewModel
 import com.example.composebasic.ui.theme.ComposeBasicTheme
 import com.example.composebasic.ui.theme.Dimensions.paddingLarge
 import com.example.composebasic.ui.theme.Dimensions.paddingMedium
 import com.example.composebasic.viewmodel.NewsViewModel
-import com.example.composebasic.ui.preview.PreviewData
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -61,7 +62,7 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NewsScreen(viewModel: NewsViewModel, modifier: Modifier = Modifier) {
+fun NewsScreen(viewModel: NewsViewModelContract, modifier: Modifier = Modifier) {
     val state by viewModel.articlesState.collectAsStateWithLifecycle()
     val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
@@ -139,67 +140,8 @@ fun NewsScreen(viewModel: NewsViewModel, modifier: Modifier = Modifier) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
-fun NewsScreen() {
-    val state = Resource.Success(PreviewData.sections)
-    val searchQuery = "Android"
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-
-    Scaffold(modifier = Modifier
-        .nestedScroll(scrollBehavior.nestedScrollConnection),
-        topBar = {
-            TopAppBar(
-                title = {
-                    SearchBar(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = paddingLarge, bottom = paddingLarge, end = paddingLarge)
-                            .clip(RoundedCornerShape(50.dp))
-                            .background(MaterialTheme.colorScheme.surfaceVariant)
-                            .padding(horizontal = paddingLarge, vertical = paddingLarge),
-                        query = searchQuery,
-                        onQueryChange = {},
-                        onSearchText = {}
-                    )
-                },
-                scrollBehavior = scrollBehavior
-            )
-        }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(top = innerPadding.calculateTopPadding())
-        ) {
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            ) {
-                when (state) {
-                    is Resource.Loading<*> -> {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            CircularProgressIndicator()
-                            Spacer(modifier = Modifier.height(paddingMedium))
-                            Text(text = "Loading")
-                        }
-                    }
-
-                    is Resource.Success -> {
-                        ArticleList(
-                            innerPadding = innerPadding,
-                            sections = state.data ?: emptyList())
-                    }
-
-                    is Resource.Error<*> -> {
-                        Text(
-                            text = "An error occurred",
-                            color = MaterialTheme.colorScheme.error,
-                            modifier = Modifier.padding(paddingLarge)
-                        )
-                    }
-                }
-            }
-        }
+fun NewsScreenPreview() {
+    ComposeBasicTheme(dynamicColor = false) {
+        NewsScreen(FakeNewsViewModel())
     }
 }
