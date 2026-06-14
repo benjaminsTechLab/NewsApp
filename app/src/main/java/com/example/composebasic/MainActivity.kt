@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -25,6 +26,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,7 +36,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.composebasic.interfaces.NewsViewModelContract
 import com.example.composebasic.network.Resource
 import com.example.composebasic.ui.components.ArticleList
-import com.example.composebasic.ui.components.SearchBar
+import com.example.composebasic.ui.components.CustomSearchBar
 import com.example.composebasic.ui.preview.FakeNewsViewModel
 import com.example.composebasic.ui.theme.ComposeBasicTheme
 import com.example.composebasic.ui.theme.Dimensions.paddingLarge
@@ -71,29 +73,31 @@ fun NewsScreen(viewModel: NewsViewModelContract, modifier: Modifier = Modifier) 
         stringResource(R.string.loading_classifying),
     )
     val defaultQuery = stringResource(R.string.default_query)
+    val recentSearches by viewModel.recentSearches.collectAsStateWithLifecycle()
 
     Scaffold(modifier = Modifier
         .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             TopAppBar(
                 title = {
-                    SearchBar(
+                    CustomSearchBar(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = paddingLarge, bottom = paddingLarge, end = paddingLarge)
-                            .clip(RoundedCornerShape(50.dp))
-                            .background(MaterialTheme.colorScheme.surfaceVariant)
-                            .padding(horizontal = paddingLarge, vertical = paddingLarge),
+                            .clip(RoundedCornerShape(50.dp)),
                         query = searchQuery,
                         onQueryChange = { viewModel.onSearchQueryChange(it) },
                         onSearchText = { viewModel.fetchNews(
                                 defaultQuery = defaultQuery,
                                 loadingStrings = loadingStrings
                             )
-                        }
+                        },
+                        recentSearches = recentSearches,
+                        onSuggestionClick = {},
+                        onRemoveSuggestion = {}
                     )
                 },
-                scrollBehavior = scrollBehavior
+                scrollBehavior = scrollBehavior,
             )
         }
     ) { innerPadding ->

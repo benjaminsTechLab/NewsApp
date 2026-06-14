@@ -9,4 +9,6 @@ interface NewsViewModelContract {
     val searchQuery: StateFlow<String>
     fun onSearchQueryChange(query: String)
     fun fetchNews(defaultQuery: String?, loadingStrings: Array<String>?)
+    fun addRecentSearch(query: String)
+    val recentSearches: StateFlow<List<String>>
 }

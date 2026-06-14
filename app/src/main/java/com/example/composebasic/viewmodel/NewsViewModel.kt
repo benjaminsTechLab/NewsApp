@@ -16,6 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -37,6 +38,9 @@ class NewsViewModel @Inject constructor(
     private val _searchQuery = MutableStateFlow("")
     override val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
 
+    private val _recentSearches = MutableStateFlow<List<String>>(emptyList())
+    override val recentSearches: StateFlow<List<String>> = _recentSearches
+
     override fun onSearchQueryChange(query: String) {
         _searchQuery.value = query
     }
@@ -57,6 +61,13 @@ class NewsViewModel @Inject constructor(
             } ?: run {
                 _articlesState.value = result.toSectionResource()
             }
+        }
+    }
+
+    override fun addRecentSearch(query: String) {
+        if (query.isBlank()) return
+        _recentSearches.update { current ->
+            listOf(query) + current.filterNot { it == query }.take(4) // keep 5 max, no dupes
         }
     }
 

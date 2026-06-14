@@ -20,6 +20,7 @@ foundationLayout = "1.11.2"
 playServicesTasks = "18.1.0"
 aicore = "0.0.1-exp01"
 lottie = "6.6.0"
+material3 = "1.4.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -50,6 +51,7 @@ androidx-compose-foundation-layout = { group = "androidx.compose.foundation", na
 play-services-tasks = { group = "com.google.android.gms", name = "play-services-tasks", version.ref = "playServicesTasks" }
 aicore = { group = "com.google.ai.edge.aicore", name = "aicore", version.ref = "aicore" }
 lottie-compose = { group = "com.airbnb.android", name = "lottie-compose", version.ref = "lottie" }
+androidx-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
