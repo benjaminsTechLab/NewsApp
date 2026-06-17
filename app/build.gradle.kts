@@ -90,6 +90,8 @@ dependencies {
 
     //Lottie
     implementation(libs.lottie.compose)
+    //navigation
+    implementation(libs.androidx.navigation.compose)
 
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))

@@ -4,19 +4,15 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -26,21 +22,27 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import com.example.composebasic.destinations.FavoriteScreen
+import com.example.composebasic.destinations.HomeScreen
+import com.example.composebasic.destinations.Screen
+import com.example.composebasic.destinations.SearchScreen
+import com.example.composebasic.destinations.bottomNavItems
 import com.example.composebasic.interfaces.NewsViewModelContract
-import com.example.composebasic.network.Resource
-import com.example.composebasic.ui.components.ArticleList
 import com.example.composebasic.ui.components.CustomSearchBar
 import com.example.composebasic.ui.preview.FakeNewsViewModel
 import com.example.composebasic.ui.theme.ComposeBasicTheme
 import com.example.composebasic.ui.theme.Dimensions.paddingLarge
-import com.example.composebasic.ui.theme.Dimensions.paddingMedium
 import com.example.composebasic.viewmodel.NewsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -75,67 +77,71 @@ fun NewsScreen(viewModel: NewsViewModelContract, modifier: Modifier = Modifier) 
     val defaultQuery = stringResource(R.string.default_query)
     val recentSearches by viewModel.recentSearches.collectAsStateWithLifecycle()
 
+    val navController = rememberNavController()
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+
     Scaffold(modifier = Modifier
         .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            TopAppBar(
-                title = {
-                    CustomSearchBar(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = paddingLarge, bottom = paddingLarge, end = paddingLarge)
-                            .clip(RoundedCornerShape(50.dp)),
-                        query = searchQuery,
-                        onQueryChange = { viewModel.onSearchQueryChange(it) },
-                        onSearchText = { viewModel.fetchNews(
-                                defaultQuery = defaultQuery,
-                                loadingStrings = loadingStrings
-                            )
-                        },
-                        recentSearches = recentSearches,
-                        onSuggestionClick = {},
-                        onRemoveSuggestion = {}
-                    )
-                },
-                scrollBehavior = scrollBehavior,
-            )
-        }
-    ) { innerPadding ->
-        Column(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(top = innerPadding.calculateTopPadding())
-        ) {
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            ) {
-                when (state) {
-                    is Resource.Loading -> {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            CircularProgressIndicator()
-                            Spacer(modifier = Modifier.height(paddingMedium))
-                            Text(text = state.message)
-                        }
-                    }
-
-                    is Resource.Success -> {
-                        ArticleList(
-                            innerPadding = innerPadding,
-                            sections = state.data ?: emptyList())
-                    }
-
-                    is Resource.Error -> {
-                        Text(
-                            text = state.message ?: "An error occurred",
-                            color = MaterialTheme.colorScheme.error,
-                            modifier = Modifier.padding(paddingLarge)
+            if (currentRoute == Screen.Search.route) {
+                TopAppBar(
+                    title = {
+                        CustomSearchBar(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(
+                                    top = paddingLarge,
+                                    bottom = paddingLarge,
+                                    end = paddingLarge
+                                )
+                                .clip(RoundedCornerShape(50.dp)),
+                            query = searchQuery,
+                            onQueryChange = { viewModel.onSearchQueryChange(it) },
+                            onSearchText = {
+                                viewModel.fetchNews(
+                                    defaultQuery = defaultQuery,
+                                    loadingStrings = loadingStrings
+                                )
+                            },
+                            recentSearches = recentSearches,
+                            onSuggestionClick = {},
+                            onRemoveSuggestion = {}
                         )
-                    }
+                    },
+                    scrollBehavior = scrollBehavior,
+                )
+            }
+        },
+        bottomBar = {
+            NavigationBar {
+                bottomNavItems.forEach { screen ->
+                    NavigationBarItem(
+                        icon = { Icon(screen.icon, contentDescription = screen.label) },
+                        label = { Text(screen.label) },
+                        selected = currentRoute == screen.route,
+                        onClick = {
+                            navController.navigate(screen.route) {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        }
+                    )
                 }
             }
+        }
+    ) { innerPadding ->
+        NavHost(
+            navController = navController,
+            startDestination = Screen.Home.route,
+            modifier = Modifier.padding(innerPadding)
+        ) {
+            composable(Screen.Home.route) { HomeScreen() }
+            composable(Screen.Search.route) { SearchScreen(state = state) }
+            composable(Screen.Favorite.route) { FavoriteScreen() }
         }
     }
 }
