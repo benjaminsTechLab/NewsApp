@@ -25,7 +25,6 @@ object NetworkModule {
     fun provideOkHttpClient(): OkHttpClient {
         val authInterceptor = Interceptor { chain ->
             val request = chain.request().newBuilder()
-                .addHeader("X-Api-Key", BuildConfig.NEWS_API_KEY)
                 .build()
             chain.proceed(request)
         }
@@ -39,7 +38,7 @@ object NetworkModule {
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://newsapi.org/v2/")
+            .baseUrl("https://hacker-news.firebaseio.com/v0/")
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()

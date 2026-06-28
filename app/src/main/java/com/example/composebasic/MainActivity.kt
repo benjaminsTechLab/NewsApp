@@ -98,12 +98,7 @@ fun NewsScreen(viewModel: NewsViewModelContract, modifier: Modifier = Modifier) 
                                 .clip(RoundedCornerShape(50.dp)),
                             query = searchQuery,
                             onQueryChange = { viewModel.onSearchQueryChange(it) },
-                            onSearchText = {
-                                viewModel.fetchNews(
-                                    defaultQuery = defaultQuery,
-                                    loadingStrings = loadingStrings
-                                )
-                            },
+                            onSearchText = { viewModel.fetchNews() },
                             recentSearches = recentSearches,
                             onSuggestionClick = {},
                             onRemoveSuggestion = {}

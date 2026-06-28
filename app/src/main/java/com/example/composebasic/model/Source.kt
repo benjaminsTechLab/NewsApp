@@ -1,7 +1,7 @@
 package com.example.composebasic.model
 
 data class Source(
-    val id: String? = null,
+    val id: Long? = null,
     val name: String? = null,
     val description: String? = null,
     val url: String? = null,

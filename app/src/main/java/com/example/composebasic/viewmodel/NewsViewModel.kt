@@ -2,17 +2,19 @@ package com.example.composebasic.viewmodel
 
 import com.example.composebasic.onxx.EmotionClassifier
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.example.composebasic.data.mapper.toSectionResource
 import com.example.composebasic.model.Article
 import com.example.composebasic.model.Section
 import com.example.composebasic.data.Respository.NewsRepository
 import com.example.composebasic.data.Respository.SummaryRepository
 import com.example.composebasic.data.mapper.toSectionList
 import com.example.composebasic.interfaces.NewsViewModelContract
+import com.example.composebasic.network.ApiService
 import com.example.composebasic.network.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,13 +22,15 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import kotlin.collections.flatten
 
 
 @HiltViewModel
 class NewsViewModel @Inject constructor(
     private val repository: NewsRepository,
     private val classifier: EmotionClassifier,
-    private val summarizer: SummaryRepository) : ViewModel(), NewsViewModelContract{
+    private val summarizer: SummaryRepository,
+    private val api: ApiService) : ViewModel(), NewsViewModelContract{
 
 
     // 1. Private MutableStateFlow - can be modified inside the ViewModel
@@ -45,30 +49,15 @@ class NewsViewModel @Inject constructor(
         _searchQuery.value = query
     }
 
-    override fun fetchNews(defaultQuery: String?, loadingStrings: Array<String>?) {
-        val searchQuery = _searchQuery.value.ifEmpty { defaultQuery ?: "" }
-        viewModelScope.launch {
-            _articlesState.value = Resource.Loading(message = loadingStrings?.get(0) ?: "")
-            val result = repository.getNewsArticles(searchQuery)
-            result.takeIf { it is Resource.Success }?.let { articleResource ->
-                articleResource.data?.let { articles ->
-                    _articlesState.value = Resource.Loading(message = loadingStrings?.get(1) ?: "") // keep Loading state while classifying
-                    val classified = withContext(Dispatchers.Default) {
-                        classifyText(articles)
-                    }
-                    _articlesState.value = classified         // then set result
-                }
-            } ?: run {
-                _articlesState.value = result.toSectionResource()
-            }
-        }
-    }
-
     override fun addRecentSearch(query: String) {
         if (query.isBlank()) return
         _recentSearches.update { current ->
             listOf(query) + current.filterNot { it == query }.take(4) // keep 5 max, no dupes
         }
+    }
+
+    override suspend fun fetchNews() {
+        val newsStories = api.getAllStories(query)
     }
 
     fun classifyText(articles: List<Article>): Resource<List<Section>>{
